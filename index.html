@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-firestore.js"></script>
+
+</head>
+
+<body>
+
+  <div class="speaker"
+    style="display: flex;justify-content: space-between;width: 13rem;box-shadow: 0 0 13px #0000003d;border-radius: 5px;">
+    <p id="action" style="color: grey;font-weight: 800; padding: 0; padding-left: 2rem;"></p>
+    <button onclick="runSpeechRecog()" style="border: transparent;padding: 0 0.5rem;">
+      Speech
+    </button>
+  </div>
+  <h3 id="output" class="hide"></h3>
+
+  <script>
+
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDca2GXDy9PQu0NErV-LAg-a9TuJmhFifQ",
+      authDomain: "notice-board-23eed.firebaseapp.com",
+      projectId: "notice-board-23eed",
+      storageBucket: "notice-board-23eed.appspot.com",
+      messagingSenderId: "966190654407",
+      appId: "1:966190654407:web:dffee7c81529b8d569afe2"
+    };
+
+    console.log("firebase", { firebase });
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+
+    let db = firebase.firestore();
+
+    runSpeechRecog = () => {
+      document.getElementById("output").innerHTML = "Loading text...";
+      var output = document.getElementById('output');
+      var action = document.getElementById('action');
+      let recognization = new webkitSpeechRecognition();
+      recognization.onstart = () => {
+        action.innerHTML = "Listening...";
+      }
+      recognization.onresult = (e) => {
+        var transcript = e.results[0][0].transcript;
+        output.innerHTML = transcript;
+        output.classList.remove("hide")
+        action.innerHTML = "";
+
+
+
+        db.collection("notice_boards").add({
+          text: transcript,
+          timestamp: +new Date(),
+        })
+          .then(function (docRef) {
+            console.log("Document written with ID: ", docRef.id);
+          })
+          .catch(function (error) {
+            console.error("Error adding document: ", error);
+          });
+      }
+      recognization.start();
+    }
+  </script>
+
+</body>
+
+</html>
