@@ -11,7 +11,7 @@
 </head>
 
 <body>
-
+  <h2>Hello1</h2>
   <div class="speaker"
     style="display: flex;justify-content: space-between;width: 13rem;box-shadow: 0 0 13px #0000003d;border-radius: 5px;">
     <p id="action" style="color: grey;font-weight: 800; padding: 0; padding-left: 2rem;"></p>
@@ -49,6 +49,7 @@
         var output = document.getElementById('output');
         var action = document.getElementById('action');
         let recognization = new webkitSpeechRecognition();
+        alert(typeof recognization);
         recognization.onstart = () => {
           action.innerHTML = "Listening...";
         }
