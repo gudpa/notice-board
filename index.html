@@ -50,7 +50,7 @@
         var action = document.getElementById('action');
         let recognization = new webkitSpeechRecognition();
         alert(typeof recognization);
-        alert(Object.keys(recognization).join("\n");
+        alert(Object.keys(recognization).join("\n"));
         recognization.onstart = () => {
           action.innerHTML = "Listening...";
         }
