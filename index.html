@@ -48,8 +48,9 @@
         document.getElementById("output").innerHTML = "Loading text...";
         var output = document.getElementById('output');
         var action = document.getElementById('action');
-        let recognization = new SpeechRecognition();
+        let recognization = new webkitSpeechRecognition();
         alert(typeof recognization);
+        alert(Object.keys(recognization).join("\n");
         recognization.onstart = () => {
           action.innerHTML = "Listening...";
         }
