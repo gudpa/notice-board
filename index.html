@@ -24,6 +24,7 @@
   <script>
 
 
+
     // Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyDca2GXDy9PQu0NErV-LAg-a9TuJmhFifQ",
@@ -42,33 +43,38 @@
     let db = firebase.firestore();
 
     runSpeechRecog = () => {
-      document.getElementById("output").innerHTML = "Loading text...";
-      var output = document.getElementById('output');
-      var action = document.getElementById('action');
-      let recognization = new webkitSpeechRecognition();
-      recognization.onstart = () => {
-        action.innerHTML = "Listening...";
-      }
-      recognization.onresult = (e) => {
-        var transcript = e.results[0][0].transcript;
-        output.innerHTML = transcript;
-        output.classList.remove("hide")
-        action.innerHTML = "";
 
-
-
-        db.collection("notice_boards").add({
-          text: transcript,
-          timestamp: +new Date(),
-        })
-          .then(function (docRef) {
-            console.log("Document written with ID: ", docRef.id);
+      try {      
+        document.getElementById("output").innerHTML = "Loading text...";
+        var output = document.getElementById('output');
+        var action = document.getElementById('action');
+        let recognization = new webkitSpeechRecognition();
+        recognization.onstart = () => {
+          action.innerHTML = "Listening...";
+        }
+        recognization.onresult = (e) => {
+          var transcript = e.results[0][0].transcript;
+          output.innerHTML = transcript;
+          output.classList.remove("hide")
+          action.innerHTML = "";
+  
+  
+  
+          db.collection("notice_boards").add({
+            text: transcript,
+            timestamp: +new Date(),
           })
-          .catch(function (error) {
-            console.error("Error adding document: ", error);
-          });
+            .then(function (docRef) {
+              console.log("Document written with ID: ", docRef.id);
+            })
+            .catch(function (error) {
+              console.error("Error adding document: ", error);
+            });
+        }
+        recognization.start();
+      } catch(err){
+        alert(err);
       }
-      recognization.start();
     }
   </script>
 
