@@ -52,6 +52,7 @@
         alert(typeof recognization + " - " + recognization.maxAlternatives);
         alert(Object.keys(recognization).join("\n"));
         recognization.onstart = () => {
+          alert("ABCD");
           action.innerHTML = "Listening...";
         }
         recognization.onresult = (e) => {
