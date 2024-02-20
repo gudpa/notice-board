@@ -73,6 +73,10 @@
 
 <body>
 
+  <div class="header">
+    <h2>College name</h2>
+  </div>
+
   <div class="container">
     <div class="output hide">
       <div>
@@ -109,6 +113,7 @@
 
         const lastNotice = data.shift();
         if(lastNotice){
+          document.querySelector(".hide").classList.remove("hide");
           document.querySelector("#date span").innerText = new Date(lastNotice.timestamp).toDateString();
           document.querySelector("#text").innerText = lastNotice.text;
         }
