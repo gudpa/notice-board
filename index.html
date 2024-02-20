@@ -5,27 +5,142 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
   <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
   <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-firestore.js"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Roboto", sans-serif;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 65px;
+      background: #111;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+
+    .header h2 {
+      font-size: 18px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 640px;
+    }
+
+    .input {
+      padding: 0 1em;
+    }
+
+    .input>* {
+      margin: 1em 0;
+      display: grid;
+      gap: 0.8em;
+    }
+
+    .hide {
+      display: none !important;
+    }
+
+    button {
+      width: 100%;
+      background: transparent;
+      color: #111;
+      border: 1px solid #111;
+      outline: none;
+      font-size: 16px;
+      border-radius: 10px;
+      padding: 0.5em;
+      display: flex;
+      align-items: center;
+      gap:0.5em;
+    }
+
+    .input p {
+      background: #eee;
+      padding: 0.5em;
+      border: 1px solid #bbb;
+      border-radius: 10px;
+    }
+
+    #start-record-btn {
+      background: green;
+      color:#fff;
+    }
+    #publish-record-btn {
+      background:#55acee;
+      color:#fff;
+    }
+    #discard-record-btn {
+      background: orangered;
+      color:#fff;
+    }
+
+    .recording {
+      width:100%;
+      height:100vh;
+      display: grid;
+      place-items: center;
+      background: rgba(0,0,0,0.5);
+      color:#fff;
+    }
+
+  </style>
 
 </head>
 
 <body>
-  <h2>Hello1</h2>
-  <div class="speaker"
-    style="display: flex;justify-content: space-between;width: 13rem;box-shadow: 0 0 13px #0000003d;border-radius: 5px;">
-    <p id="action" style="color: grey;font-weight: 800; padding: 0; padding-left: 2rem;"></p>
-    <button onclick="runSpeechRecog()" style="border: transparent;padding: 0 0.5rem;">
-      Speech
-    </button>
+
+
+  <div class="header">
+    <h2>College name</h2>
   </div>
-  <h3 id="output" class="hide"></h3>
+
+  <div class="container">
+    <div class="input">
+      <div class="before">
+        <h2>Record today's notice:</h2>
+        <button id="start-record-btn">
+          <i class="fa fa-microphone"></i>
+          <span>Start recording</span>
+        </button>
+      </div>
+
+      <div class="recording hide">
+        <span>Listening....</span>
+      </div>
+
+      <div class="after hide">
+        <h2>Recorded Notice: </h2>
+        <p></p>
+        <button id="publish-record-btn">
+          <i class="fa fa-paper-plane"></i>
+          <span>Publish</span>
+        </button>
+        <button id="discard-record-btn">
+          <i class="fa fa-trash"></i>
+          <span>Discard</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script>
-
-
-
-    // Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyDca2GXDy9PQu0NErV-LAg-a9TuJmhFifQ",
       authDomain: "notice-board-23eed.firebaseapp.com",
@@ -37,48 +152,63 @@
 
     console.log("firebase", { firebase });
 
-    // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
 
     let db = firebase.firestore();
 
-    runSpeechRecog = () => {
+    const runSpeechRecog = () => {
 
-      try {      
-        document.getElementById("output").innerHTML = "Loading text...";
+      try {
         var output = document.getElementById('output');
         var action = document.getElementById('action');
         let recognization = new webkitSpeechRecognition();
-        alert(typeof recognization + " - " + recognization.maxAlternatives);
-        alert(Object.keys(recognization).join("\n"));
+
         recognization.onstart = () => {
-          alert("ABCD");
-          action.innerHTML = "Listening...";
+          document.querySelector(".before").classList.add("hide");
+          document.querySelector(".after").classList.add("hide");
+          document.querySelector(".recording").classList.remove("hide");
         }
+
         recognization.onresult = (e) => {
           var transcript = e.results[0][0].transcript;
           output.innerHTML = transcript;
           output.classList.remove("hide")
           action.innerHTML = "";
-  
-  
-  
-          db.collection("notice_boards").add({
-            text: transcript,
-            timestamp: +new Date(),
-          })
-            .then(function (docRef) {
-              console.log("Document written with ID: ", docRef.id);
-            })
-            .catch(function (error) {
-              console.error("Error adding document: ", error);
-            });
+
+          document.querySelector(".before").classList.add("hide");
+          document.querySelector(".recording").classList.add("hide");
+          document.querySelector(".after").classList.remove("hide");
         }
+
         recognization.start();
-      } catch(err){
+      } catch (err) {
         alert(err);
       }
     }
+
+
+    document.querySelector("#start-record-btn").addEventListener("click", runSpeechRecog);
+
+    document.querySelector("#publish-record-btn").addEventListener("click", () => {
+      db.collection("notice_boards").add({
+        text: transcript,
+        timestamp: +new Date(),
+      })
+        .then(function (docRef) {
+          console.log("Document written with ID: ", docRef.id);
+        })
+        .catch(function (error) {
+          console.error("Error adding document: ", error);
+        });
+    });
+
+    document.querySelector("#publish-record-btn").addEventListener("click", () => {
+      document.querySelector(".after").classList.add("hide");
+      document.querySelector(".recording").classList.add("hide");
+      document.querySelector(".before").classList.remove("hide");
+    });
+
+
   </script>
 
 </body>
