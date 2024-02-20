@@ -206,6 +206,7 @@
       })
         .then(function (docRef) {
           alert("Published successfully");
+          document.querySelector("#discard-record-btn").click();
           console.log("Document written with ID: ", docRef.id);
         })
         .catch(function (error) {
