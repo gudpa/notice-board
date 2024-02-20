@@ -18,6 +18,7 @@
 
     body {
       font-family: "Roboto", sans-serif;
+      overflow: hidden;
     }
 
     .header {
@@ -41,10 +42,11 @@
     .container {
       width: 100%;
       max-width: 640px;
+      margin: 0 auto;
     }
 
     .input {
-      padding: 0 1em;
+      padding: 1em;
     }
 
     .input>* {
@@ -61,12 +63,13 @@
       width: 100%;
       background: transparent;
       color: #111;
-      border: 1px solid #111;
+      border: 1px solid #eee;
       outline: none;
       font-size: 16px;
       border-radius: 10px;
       padding: 0.5em;
       display: flex;
+      justify-content: center;
       align-items: center;
       gap:0.5em;
     }
@@ -93,11 +96,13 @@
 
     .recording {
       width:100%;
-      height:100vh;
+      height:calc(100vh - 100px);
       display: grid;
       place-items: center;
       background: rgba(0,0,0,0.5);
       color:#fff;
+      border-radius: 10px;
+      font-size: 18px;
     }
 
   </style>
@@ -153,14 +158,12 @@
     console.log("firebase", { firebase });
 
     const app = firebase.initializeApp(firebaseConfig);
-
+    let transcript = "";
     let db = firebase.firestore();
 
     const runSpeechRecog = () => {
 
       try {
-        var output = document.getElementById('output');
-        var action = document.getElementById('action');
         let recognization = new webkitSpeechRecognition();
 
         recognization.onstart = () => {
@@ -170,10 +173,9 @@
         }
 
         recognization.onresult = (e) => {
-          var transcript = e.results[0][0].transcript;
-          output.innerHTML = transcript;
-          output.classList.remove("hide")
-          action.innerHTML = "";
+          transcript = e.results[0][0].transcript;
+
+          document.querySelector(".after p").innerHTML = transcript;
 
           document.querySelector(".before").classList.add("hide");
           document.querySelector(".recording").classList.add("hide");
