@@ -97,7 +97,7 @@
 
     .recording {
       width:100%;
-      height:calc(100vh - 120px);
+      height:calc(100vh - 150px);
       display: grid;
       place-items: center;
       background: rgba(0,0,0,0.5);
@@ -174,13 +174,16 @@
         }
 
         recognization.onresult = (e) => {
-          transcript = e.results[0][0].transcript;
-
-          document.querySelector(".after p").innerHTML = transcript;
-
           document.querySelector(".before").classList.add("hide");
           document.querySelector(".recording").classList.add("hide");
           document.querySelector(".after").classList.remove("hide");
+          
+          transcript = e?.results[0][0]?.transcript;
+          if(transcript){
+            document.querySelector(".after p").innerHTML = transcript;
+          } else {
+            document.querySelector("#discard-record-btn").click();
+          }
         }
 
         recognization.start();
