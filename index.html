@@ -67,7 +67,7 @@
       outline: none;
       font-size: 16px;
       border-radius: 10px;
-      padding: 0.5em;
+      padding: 0.8em;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -79,6 +79,7 @@
       padding: 0.5em;
       border: 1px solid #bbb;
       border-radius: 10px;
+      margin-bottom: 0.5em;
     }
 
     #start-record-btn {
@@ -96,7 +97,7 @@
 
     .recording {
       width:100%;
-      height:calc(100vh - 100px);
+      height:calc(100vh - 120px);
       display: grid;
       place-items: center;
       background: rgba(0,0,0,0.5);
@@ -197,6 +198,7 @@
         timestamp: +new Date(),
       })
         .then(function (docRef) {
+          alert("Published successfully");
           console.log("Document written with ID: ", docRef.id);
         })
         .catch(function (error) {
@@ -204,7 +206,7 @@
         });
     });
 
-    document.querySelector("#publish-record-btn").addEventListener("click", () => {
+    document.querySelector("#discard-record-btn").addEventListener("click", () => {
       document.querySelector(".after").classList.add("hide");
       document.querySelector(".recording").classList.add("hide");
       document.querySelector(".before").classList.remove("hide");
